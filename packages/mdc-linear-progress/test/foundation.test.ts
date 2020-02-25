@@ -73,7 +73,7 @@ describe('MDCLinearProgressFoundation', () => {
        expect(mockAdapter.setStyle)
            .toHaveBeenCalledWith(primaryBar, 'transform', 'scaleX(1)');
        expect(mockAdapter.setStyle)
-           .toHaveBeenCalledWith(buffer, 'transform', 'scaleX(1)');
+           .toHaveBeenCalledWith(buffer, 'flex-basis', '100%');
        expect(mockAdapter.removeAttribute)
            .toHaveBeenCalledWith(strings.ARIA_VALUENOW);
      });
@@ -124,7 +124,7 @@ describe('MDCLinearProgressFoundation', () => {
        foundation.setDeterminate(false);
        foundation.setDeterminate(true);
        checkNumTimesSpyCalledWithArgs(
-           mockAdapter.setStyle, [buffer, 'transform', 'scaleX(0.123)'], 2);
+           mockAdapter.setStyle, [buffer, 'flex-basis', '12.3%'], 2);
      });
 
   it('#setDeterminate updates progress value set while determinate is false after determinate is true',
@@ -168,7 +168,7 @@ describe('MDCLinearProgressFoundation', () => {
     expect(mockAdapter.setAttribute).not.toHaveBeenCalled();
   });
 
-  it('#setBuffer sets transform', () => {
+  it('#setBuffer sets flex-basis', () => {
     const {foundation, mockAdapter} = setupTest();
     mockAdapter.hasClass.withArgs(cssClasses.INDETERMINATE_CLASS)
         .and.returnValue(false);
@@ -177,7 +177,7 @@ describe('MDCLinearProgressFoundation', () => {
     foundation.init();
     foundation.setBuffer(0.5);
     expect(mockAdapter.setStyle)
-        .toHaveBeenCalledWith(buffer, 'transform', 'scaleX(0.5)');
+        .toHaveBeenCalledWith(buffer, 'flex-basis', '50%');
   });
 
   it('#setBuffer on indeterminate does nothing', () => {

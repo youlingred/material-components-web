@@ -74,8 +74,8 @@ export class MDCLinearProgressFoundation extends
     if (this.isDeterminate_) {
       this.adapter_.removeClass(cssClasses.INDETERMINATE_CLASS);
       this.adapter_.setAttribute(strings.ARIA_VALUENOW, this.progress_.toString());
-      this.setScale_(this.adapter_.getPrimaryBar(), this.progress_);
-      this.setScale_(this.adapter_.getBuffer(), this.buffer_);
+      this.setProgress_(this.adapter_.getPrimaryBar(), this.progress_);
+      this.setProgress_(this.adapter_.getBuffer(), this.buffer_);
     } else {
       if (this.isReversed_) {
         // Adding/removing REVERSED_CLASS starts a translate animation, while
@@ -90,15 +90,15 @@ export class MDCLinearProgressFoundation extends
 
       this.adapter_.addClass(cssClasses.INDETERMINATE_CLASS);
       this.adapter_.removeAttribute(strings.ARIA_VALUENOW);
-      this.setScale_(this.adapter_.getPrimaryBar(), 1);
-      this.setScale_(this.adapter_.getBuffer(), 1);
+      this.setProgress_(this.adapter_.getPrimaryBar(), 1);
+      this.setProgress_(this.adapter_.getBuffer(), 1);
     }
   }
 
   setProgress(value: number) {
     this.progress_ = value;
     if (this.isDeterminate_) {
-      this.setScale_(this.adapter_.getPrimaryBar(), value);
+      this.setProgress_(this.adapter_.getPrimaryBar(), value);
       this.adapter_.setAttribute(strings.ARIA_VALUENOW, value.toString());
     }
   }
@@ -106,7 +106,7 @@ export class MDCLinearProgressFoundation extends
   setBuffer(value: number) {
     this.buffer_ = value;
     if (this.isDeterminate_) {
-      this.setScale_(this.adapter_.getBuffer(), value);
+      this.setProgress_(this.adapter_.getBuffer(), value);
     }
   }
 
@@ -139,12 +139,17 @@ export class MDCLinearProgressFoundation extends
     this.adapter_.addClass(cssClasses.CLOSED_CLASS);
   }
 
-  private setScale_(el: HTMLElement | null, scaleValue: number) {
+  private setProgress_(el: HTMLElement|null, progressValue: number) {
     if (!el) {
       return;
+    } else if (el === this.adapter_.getPrimaryBar()) {
+      const value = `scaleX(${progressValue})`;
+      this.adapter_.setStyle(
+          el, getCorrectPropertyName(window, 'transform'), value);
+    } else if (el === this.adapter_.getBuffer()) {
+      const value = `${progressValue * 100}%`;
+      this.adapter_.setStyle(el, 'flex-basis', value);
     }
-    const value = `scaleX(${scaleValue})`;
-    this.adapter_.setStyle(el, getCorrectPropertyName(window, 'transform'), value);
   }
 }
 
